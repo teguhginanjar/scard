@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "scard.h"
 
 
 int main ()
