@@ -1,21 +1,28 @@
 #ifndef __SCARD_H__
 #define __SCARD_H__
 
-#include <pcsclite.h>
-
+#include "scard-internal.h"
 
 typedef enum {
 	DEFAULT = 0, 
-	OMNNIKEY_5321;
+	OMNNIKEY_5321
 }
 READER_TYPE;
 
 
-typedef struct {
+typedef struct _SCARD_CTX {
 	int fd;	
 	int reader;
 	
-		
+	SCARDCONTEXT hContext;
+	LPTSTR mszReaders;
+	SCARDHANDLE hCard;
+	DWORD dwReaders, dwActiveProtocol, dwRecvLength;
+
+	SCARD_IO_REQUEST pioSendPci;
+	BYTE pbRecvLength[258];
+	SCARD_READERSTATE * rgReaderStates_t;
+	SCARD_READERSTATE rgReaderStates[1];		
 }
 SCARD_CTX;
 
