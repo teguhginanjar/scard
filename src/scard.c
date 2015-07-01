@@ -124,11 +124,6 @@ get_readers :
 	return 0;
 }
 
-<<<<<<< HEAD
-///
-=======
-
-
 int scard_init (SCARD_CTX ** ctx, READER_TYPE RD)
 {
 	int ret = 0;
@@ -146,4 +141,3 @@ int scard_init (SCARD_CTX ** ctx, READER_TYPE RD)
 
 }
 
->>>>>>> abc
