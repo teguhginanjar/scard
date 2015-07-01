@@ -5,7 +5,8 @@
 int main ()
 {
 
-	
+	SCARD_CTX * ctx;
+		
 	
 	return 0;
 }
