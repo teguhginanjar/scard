@@ -10,7 +10,6 @@ int _scard_init_2 (SCARD_CTX ** ctx)
 		return -1;
 	}	 
 	
-	
 	return 0;
 } 
 
@@ -43,21 +42,15 @@ get_readers :
 		readers = NULL;	
 	}	
 	
-
 	if ((*ctx)->rgReaderStates_t != NULL)	{
 		free ((*ctx)->rgReaderStates_t);
 		(*ctx)->rgReaderStates_t = NULL;
 	}
 	
-	
 	ret = SCardListReaders ((*ctx)->hContext, NULL, NULL, &(*ctx)->dwReaders);
-
-	
 	(*ctx)->mszReaders = calloc((*ctx)->dwReaders, sizeof (char));
-
 	printf ("scanning present readers .. \n");
 	ret = SCardListReaders ((*ctx)->hContext, NULL, (*ctx)->mszReaders, &(*ctx)->dwReaders);
-	
 
 	CHECK ("Reader ", ret);
 
@@ -82,7 +75,6 @@ get_readers :
 	*(*ctx)->mszReaders = '\0';
 	ret = SCardListReaders ((*ctx)->hContext,NULL, (*ctx)->mszReaders, &(*ctx)->dwReaders);
 
-
 	iReaders = 0;
 	ptr = (*ctx)->mszReaders;
 	while (*ptr != '\0')	{
@@ -96,7 +88,6 @@ get_readers :
 		printf ("calloc : not enought memory for readers table \n");	
 		return -1;
 	}
-
 	
 	iReaders = 0;
 	ptr  = (*ctx)->mszReaders;
@@ -118,8 +109,6 @@ get_readers :
 
 	(*ctx)->rgReaderStates_t[iReaders].szReader = "\\\\?PnP\\Notification";
 	(*ctx)->rgReaderStates_t[iReaders].dwCurrentState = SCARD_STATE_UNAWARE;
-
-
 	
 	return 0;
 }
@@ -131,13 +120,9 @@ int scard_init (SCARD_CTX ** ctx, READER_TYPE RD)
 	if (RD == DEFAULT)	{
 		ret = _scard_init (&dtx);
 	}
-	else if (RD == OMNNIKEY_5321)	{
+	if (RD == OMNNIKEY_5321)	{
 		ret = _scard_init_2 (&dtx);
 	}
-	else {
-
-	}
-
-
+	
 }
 
