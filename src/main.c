@@ -6,7 +6,7 @@ int main ()
 {
 
 	SCARD_CTX * ctx;
-	scard_init (&ctx, DEFAULT);		
+	scard_init (&ctx, RT_DEFAULT);		
 	
 	return 0;
 }
