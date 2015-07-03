@@ -25,14 +25,13 @@ int _scard_init (SCARD_CTX ** ctx)
 	} 	
 	
 	int i , iReaders;
-	char * ptr, ** readers;
+	char * ptr, ** readers = NULL;
 	DWORD dwReadersOld = 0;
 	
 	DWORD ret = SCardEstablishContext (SCARD_SCOPE_SYSTEM, NULL, NULL, &(*ctx)->hContext);
 	CHECK ("ESTABLISH CONTEXT", ret);
 	(*ctx)->rgReaderStates[0].szReader = "\\\\?PnP\\Notification";
 	(*ctx)->rgReaderStates[0].dwCurrentState = SCARD_STATE_UNAWARE;
-	
 	ret = SCardGetStatusChange ((*ctx)->hContext, 0, (*ctx)->rgReaderStates, 1);
 	
 get_readers :
@@ -56,7 +55,7 @@ get_readers :
 
 	if (ret != SCARD_E_NO_READERS_AVAILABLE)	{
 		printf ("ScardListReaders %lu %ld \n", ret,  (*ctx)->hContext);
-		return -1;
+		//return -1;
 	}
 	
 	dwReadersOld = (*ctx)->dwReaders;
@@ -95,6 +94,7 @@ get_readers :
 	while (*ptr != '\0')	{
 		printf ("[%d : %s]\n", iReaders, ptr);
 		readers[iReaders] = ptr;
+		ptr += strlen(ptr) + 1;
 		iReaders ++;
 	}
 
@@ -103,13 +103,14 @@ get_readers :
 
  	for (i=0; i<iReaders; i++) {
 		(*ctx)->rgReaderStates_t[i].szReader = readers[i];
-		(*ctx)->rgReaderStates_t[i].dwCurrentState = SCARD_STATE_UNAWARE;
-		printf ("found : %s", readers[i]);
+		//(*ctx)->rgReaderStates_t[i].dwCurrentState = SCARD_STATE_UNAWARE;
+		printf ("found : %s\n", readers[i]);
 	}
 
+/*
 	(*ctx)->rgReaderStates_t[iReaders].szReader = "\\\\?PnP\\Notification";
 	(*ctx)->rgReaderStates_t[iReaders].dwCurrentState = SCARD_STATE_UNAWARE;
-	
+	*/
 	return 0;
 }
 
@@ -118,10 +119,10 @@ int scard_init (SCARD_CTX ** ctx, READER_TYPE RD)
 	int ret = 0;
 	SCARD_CTX * dtx = *ctx;
 	if (RD == RT_DEFAULT)	{
-		ret = _scard_init (&dtx);
+		ret = _scard_init_2 (&dtx);
 	}
 	if (RD == RT_OMNNIKEY_5321)	{
-		ret = _scard_init_2 (&dtx);
+		ret = _scard_init (&dtx);
 	}
 	
 }
