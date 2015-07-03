@@ -117,10 +117,10 @@ int scard_init (SCARD_CTX ** ctx, READER_TYPE RD)
 {
 	int ret = 0;
 	SCARD_CTX * dtx = *ctx;
-	if (RD == DEFAULT)	{
+	if (RD == RT_DEFAULT)	{
 		ret = _scard_init (&dtx);
 	}
-	if (RD == OMNNIKEY_5321)	{
+	if (RD == RT_OMNNIKEY_5321)	{
 		ret = _scard_init_2 (&dtx);
 	}
 	

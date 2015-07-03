@@ -4,8 +4,8 @@
 #include "scard-internal.h"
 
 typedef enum {
-	DEFAULT = 0, 
-	OMNNIKEY_5321
+	RT_DEFAULT = 0, 
+	RT_OMNNIKEY_5321
 }
 READER_TYPE;
 
