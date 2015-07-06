@@ -134,10 +134,8 @@ int scard_init (SCARD_CTX ** ctx, READER_TYPE RD)
 
 
 int scard_connect_picc (SCARD_CTX ** ctx)	
-{
-
-	
-	fprintf (stderr, "<%s>\n", (*ctx)->rgReaderStates_t[0].szReader);
+{	
+//	fprintf (stderr, "<%s>\n", (*ctx)->rgReaderStates_t[0].szReader);
 	
 	DWORD dwRet = 
 			SCardConnect ((*ctx)->hContext, (*ctx)->rgReaderStates_t[1].szReader,

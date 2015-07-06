@@ -16,8 +16,6 @@
 		printf(f ": %s\n", pcsc_stringify_error(rv)); \
 		rv = -1;	\
 	}
-		//returan -1; \
-	}
 
 
 
