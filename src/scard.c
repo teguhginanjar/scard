@@ -101,34 +101,33 @@ get_readers :
 	// set initial states something we dont know 
 	// the loop below will include this state to the dwCurrentState
 
-	(*ctx)->rgReaderStates_t = calloc (iReaders+1, sizeof ((*ctx)->rgReaderStates_t));
+	(*ctx)->rgReaderStates_t = calloc (iReaders+1, sizeof (*(*ctx)->rgReaderStates_t));
 	if (NULL == (*ctx)->rgReaderStates_t)	{
 		printf ("calloc : not enought memory for readers table \n");	
 		return -1;
 	}
 	
  	for (i=0; i<iReaders; i++) {
-		//(*ctx)->rgReaderStates_t[i].szReader = readers[i];
-		//(*ctx)->rgReaderStates_t[i].dwCurrentState = SCARD_STATE_UNAWARE;
-		printf ("found : %s\n", readers[i]);
+		(*ctx)->rgReaderStates_t[i].szReader = readers[i];
+		(*ctx)->rgReaderStates_t[i].dwCurrentState = SCARD_STATE_UNAWARE;
+		printf ("found : %s:: %s\n", readers[i],(*ctx)->rgReaderStates_t[i].szReader = readers[i]);
 	}
 
-/*
-	(*ctx)->rgReaderStates_t[iReaders].szReader = "\\\\?PnP\\Notification";
-	(*ctx)->rgReaderStates_t[iReaders].dwCurrentState = SCARD_STATE_UNAWARE;
-	*/
+
+	//(*ctx)->rgReaderStates_t[iReaders].szReader = "\\\\?PnP\\Notification";
+	//(*ctx)->rgReaderStates_t[iReaders].dwCurrentState = SCARD_STATE_UNAWARE;
+	
 	return 0;
 }
 
 int scard_init (SCARD_CTX ** ctx, READER_TYPE RD)
 {
 	int ret = 0;
-	SCARD_CTX * dtx = *ctx;
 	if (RD == RT_DEFAULT)	{
-		ret = _scard_init_2 (&dtx);
+		ret = _scard_init_2 (ctx);
 	}
 	if (RD == RT_OMNNIKEY_5321)	{
-		ret = _scard_init (&dtx);
+		ret = _scard_init (ctx);
 	}
 	
 }
@@ -136,11 +135,19 @@ int scard_init (SCARD_CTX ** ctx, READER_TYPE RD)
 
 int scard_connect_picc (SCARD_CTX ** ctx)	
 {
+
+	
+	fprintf (stderr, "<%s>\n", (*ctx)->rgReaderStates_t[0].szReader);
+	
 	DWORD dwRet = 
 			SCardConnect ((*ctx)->hContext, (*ctx)->rgReaderStates_t[1].szReader,
 							SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0| SCARD_PROTOCOL_T1, 
 							&(*ctx)->hCard, &(*ctx)->dwActiveProtocol);
 	CHECK ("CANT CONNECT ICC/PICC", dwRet);
+	if (dwRet == -1) {
+		
+		return 1;
+	} 
 	switch ((*ctx)->dwActiveProtocol){
 	case SCARD_PROTOCOL_T0:	(*ctx)->pioSendPci = *SCARD_PCI_T0; break;
 	case SCARD_PROTOCOL_T1: (*ctx)->pioSendPci = *SCARD_PCI_T1; break;
