@@ -26,7 +26,7 @@ typedef struct _SCARD_CTX {
 }
 SCARD_CTX;
 
-
+int scard_connect_picc (SCARD_CTX ** ctx);
 int scard_init 			(SCARD_CTX ** ctx, READER_TYPE RT);
 int scard_set_speed 	(SCARD_CTX ** ctx, int speed);
 int scard_exchange_data (SCARD_CTX ** ctx, int timeout, BYTE * pbCmd, size_t szLengthCmd, BYTE * pbRecv, int * resplen);
