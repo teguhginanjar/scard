@@ -34,7 +34,7 @@ int _scard_init (SCARD_CTX ** ctx)
 	(*ctx)->rgReaderStates[0].dwCurrentState = SCARD_STATE_UNAWARE;
 	ret = SCardGetStatusChange ((*ctx)->hContext, 0, (*ctx)->rgReaderStates, 1);
 	
-get_readers :
+//get_readers :
 	
 	if (NULL != readers)	{
 		free (readers);
@@ -113,10 +113,10 @@ get_readers :
 		printf ("found : %s:: %s\n", readers[i],(*ctx)->rgReaderStates_t[i].szReader = readers[i]);
 	}
 
-
-	//(*ctx)->rgReaderStates_t[iReaders].szReader = "\\\\?PnP\\Notification";
-	//(*ctx)->rgReaderStates_t[iReaders].dwCurrentState = SCARD_STATE_UNAWARE;
+	(*ctx)->rgReaderStates_t[iReaders].szReader = "\\\\?PnP\\Notification";
+	(*ctx)->rgReaderStates_t[iReaders].dwCurrentState = SCARD_STATE_UNAWARE;
 	
+	free (readers);	
 	return 0;
 }
 
@@ -128,15 +128,13 @@ int scard_init (SCARD_CTX ** ctx, READER_TYPE RD)
 	}
 	if (RD == RT_OMNNIKEY_5321)	{
 		ret = _scard_init (ctx);
-	}
-	
+	}	
 }
 
 
 int scard_connect_picc (SCARD_CTX ** ctx)	
 {	
-//	fprintf (stderr, "<%s>\n", (*ctx)->rgReaderStates_t[0].szReader);
-	
+	fprintf (stderr, "<%s>\n", (*ctx)->rgReaderStates_t[1].szReader);
 	DWORD dwRet = 
 			SCardConnect ((*ctx)->hContext, (*ctx)->rgReaderStates_t[1].szReader,
 							SCARD_SHARE_SHARED, SCARD_PROTOCOL_T0| SCARD_PROTOCOL_T1, 
@@ -154,3 +152,10 @@ int scard_connect_picc (SCARD_CTX ** ctx)
 }
 
 
+int scard_close (SCARD_CTX ** ctx)
+{
+	free ((*ctx)->rgReaderStates_t);
+	free ((*ctx)->mszReaders);
+	free ((*ctx));
+	
+}
