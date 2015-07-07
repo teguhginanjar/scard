@@ -6,8 +6,9 @@ int main ()
 {
 
 	SCARD_CTX * ctx;
-	scard_init (&ctx, RT_OMNNIKEY_5321);		
-	int ret = scard_connect_picc (&ctx);	
+	int ret = scard_init (&ctx, RT_OMNNIKEY_5321);		
+	if (ret <= 0) return -1; 
+	ret = scard_connect_picc (&ctx);	
 	printf ("ret %i\n", ret);
 	scard_close (&ctx);
 

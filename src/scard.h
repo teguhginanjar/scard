@@ -20,7 +20,7 @@ typedef struct _SCARD_CTX {
 	DWORD dwReaders, dwActiveProtocol, dwRecvLength;
 
 	SCARD_IO_REQUEST pioSendPci;
-	BYTE pbRecvLength[258];
+	BYTE pbRecvBuffer[258];
 	SCARD_READERSTATE * rgReaderStates_t;
 	SCARD_READERSTATE rgReaderStates[1];		
 }
@@ -29,8 +29,8 @@ SCARD_CTX;
 int scard_connect_picc (SCARD_CTX ** ctx);
 int scard_init 			(SCARD_CTX ** ctx, READER_TYPE RT);
 int scard_set_speed 	(SCARD_CTX ** ctx, int speed);
-int scard_exchange_data (SCARD_CTX ** ctx, int timeout, BYTE * pbCmd, size_t szLengthCmd, BYTE * pbRecv, int * resplen);
-int scard_close 		(SCARD_CTX ** ctx);
+int scard_exchange_data (SCARD_CTX ** ctx, BYTE * pbCmd, size_t szLengthCmd, BYTE * pbRecv, int * resplen);
+void scard_close 		(SCARD_CTX ** ctx);
 
 
 
