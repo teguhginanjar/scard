@@ -9,5 +9,7 @@ int main ()
 	scard_init (&ctx, RT_OMNNIKEY_5321);		
 	int ret = scard_connect_picc (&ctx);	
 	printf ("ret %i\n", ret);
+	scard_close (&ctx);
+
 	return 0;
 }
