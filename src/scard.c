@@ -26,7 +26,7 @@ int _scard_init (SCARD_CTX ** ctx)
 	
 	int i , iReaders;
 	char * ptr, ** readers = NULL;
-	DWORD dwReadersOld = 0;
+	//DWORD dwReadersOld = 0;
 	
 	DWORD ret = SCardEstablishContext (SCARD_SCOPE_SYSTEM, NULL, NULL, &(*ctx)->hContext);
 	CHECK ("ESTABLISH CONTEXT", ret);
@@ -58,7 +58,7 @@ int _scard_init (SCARD_CTX ** ctx)
 		//return -1;
 	}
 	
-	dwReadersOld = (*ctx)->dwReaders;
+	//dwReadersOld = (*ctx)->dwReaders;
 
 	if ((*ctx)->mszReaders)	{
 		free ((*ctx)->mszReaders);
@@ -128,7 +128,8 @@ int scard_init (SCARD_CTX ** ctx, READER_TYPE RD)
 	}
 	if (RD == RT_OMNNIKEY_5321)	{
 		ret = _scard_init (ctx);
-	}	
+	}
+	return ret;	
 }
 
 
@@ -152,10 +153,30 @@ int scard_connect_picc (SCARD_CTX ** ctx)
 }
 
 
-int scard_close (SCARD_CTX ** ctx)
+void scard_close (SCARD_CTX ** ctx)
 {
 	free ((*ctx)->rgReaderStates_t);
 	free ((*ctx)->mszReaders);
 	free ((*ctx));
 	
 }
+
+
+int scard_exchange_data (SCARD_CTX ** ctx, BYTE * pbCmd, size_t szLengthCmd, BYTE * pbRecv, int * resplen)
+{
+	int i = 0;
+	for (; i<szLengthCmd; i++) printf ("cmd [%.02X]", pbCmd[i]); puts ("");
+	(*ctx)->dwRecvLength = sizeof ((*ctx)->pbRecvBuffer);
+	DWORD dwRet = SCardTransmit ((*ctx)->hCard, &(*ctx)->pioSendPci, pbCmd, szLengthCmd, NULL, (*ctx)->pbRecvBuffer, &(*ctx)->dwRecvLength);
+	CHECK ("EXCHANGE ", dwRet);
+	if (dwRet == -1)	{
+		return -1;
+	}
+	memcpy (pbRecv, (*ctx)->pbRecvBuffer, (*ctx)->dwRecvLength);
+
+	if (resplen != NULL)	*resplen = (*ctx)->dwRecvLength;
+
+	for (i=0; i<(*ctx)->dwRecvLength; i++) printf ("[%.02X]", (*ctx)->pbRecvBuffer[i]); puts ("");
+	return 0;
+}
+
